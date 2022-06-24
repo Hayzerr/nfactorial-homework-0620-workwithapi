@@ -66,7 +66,29 @@ function App() {
   };
 
 
-  const toggleItemDone = ({ id, done }) => {
+  const toggleItemDone = ({ id, done, completed_date, task_id }) => {
+      if(completed_date){ 
+        axios.post(`https://api.todoist.com/rest/v1/tasks/${task_id}/reopen`, {
+          done: !done
+        },
+        {
+          headers: {
+            Authorization: 'Bearer b81ab9d54dee10acd6dac0403078963d856ff9c7'
+
+          }
+        }).then((response) => {
+            setItems(items.map((item) => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        done: !done
+                    }
+                }
+                return item
+            }))
+        })
+      }
+      else{
       axios.post(`https://api.todoist.com/rest/v1/tasks/${id}/close`, {
           done: !done
       },
@@ -86,6 +108,7 @@ function App() {
           }))
 
       })
+    }
   };
 
   // N => map => N
